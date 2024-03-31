@@ -626,8 +626,9 @@ happy place.
 At this point, you can exit the `pdb` debugger by calling `exit()` **OR**
 `CTRL+D` (same as the Python REPL). With these five commands, you should be able
 to figure out a couple other bugs and then follow along with a bit more advanced
-`pdb` examples. **Put each issue you fix in your list of issues in Que
-instructions.txt. P
+`pdb` examples. **Put each issue you fix in your list of issues in Question 1 of
+instructions.txt.** Once you have three clear and distinct bugs fixed, you're
+welcome to move on.
 
 [Prof. X]: That concludes part one - thanks again to user spside for making a
 [fun and tidy example repo](https://github.com/spiside/pdb-tutorial) for pdb! If
@@ -774,7 +775,9 @@ One of your three tests is meant to test that the whole game can run. However,
 you may find that the single class method `run` in the runner class is really
 hard to test - because everything is run in local variables, instead of having a
 persistent object of the GameRunner class, it's very difficult as written to
-confirm that the runner actually runs.
+confirm that the runner actually runs. (For a quick intro to what's going on
+with class methods, you can check out
+[this RealPython help page](https://realpython.com/instance-class-and-static-methods-demystified/)).
 
 The fact that this code is hard to test is actually a useful indicator we should
 *refactor* our code, a.k.a. reorganize the classes, functions, logic, etc. so
@@ -782,10 +785,13 @@ it's easier to test the parts of the logic you care about. In this case, we can
 notice that right now, this `run` function is a class method - that is, it isn't
 associated with a specific instance of a GameRunner, and the call to it is just
 `GameRunner.run`, meaning we don't keep the GameRunner that is used to play
-the game after the function runs. **I strongly encourage you to refactor the
+the game after the function runs. **To write your `run` test, refactor the
 GameRunner class and everything that calls it so that `run` is no longer a
 class method, but rather gets called from a specific instance of a GameRunner
-(i.e. you first initialize a GameRunner(), then call `run` using that one).
+(i.e. you first initialize a GameRunner(), then call `run` using that one). It
+may feel like an extra step, but it will save you a lot of effort trying to write
+a test for the runner itself. (When I refactored this, I also ended up moving
+the components of running the game into helper methods, but that's optional here.)
 
 Because this changes how the game runner itself is called, you'll want to be
 careful that after this refactor, the game itself and your other tests still run.
