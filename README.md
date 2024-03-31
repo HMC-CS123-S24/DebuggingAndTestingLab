@@ -644,9 +644,12 @@ when you're having trouble tracking a bug!
 
 Now that you've debugged, it'd be nice to add some tests. Choose at least three
 behaviors to test, including:
-* at least one test that tests that a bug you fixed remains fixed,
-* at least one test that verifies that the runner works correctly end-to-end.
-Put the list of bugs you fix in instructions.txt under the second question.
+* at least one test that allows you to check that the dice add up correctly, and
+* at least one test that verifies that the game runner works correctly end-to-end.
+During this process, you may change the code as much as you wish to ensure you can
+write these tests. In particular, you will likely want to refactor the Runner class.
+Put the list of tests you write (at least three) in instructions.txt under the
+second question.
 
 ## Testing with unittest
 
@@ -767,22 +770,32 @@ use mocks. However, it's worth making sure you also have some way to test that
 all the pieces are working together without that mock, e.g. an integration test.
 
 ### Refactoring and tidying
+One of your three tests is meant to test that the whole game can run. However,
+you may find that the single class method `run` in the runner class is really
+hard to test - because everything is run in local variables, instead of having a
+persistent object of the GameRunner class, it's very difficult as written to
+confirm that the runner actually runs.
 
-It's possible that in the process of writing tests for this code, you'll realize
-that there are parts of the code organization that make it hard to test. (For
-example, the single class method `run` in the runner class is really hard to
-break apart!) Sometimes, those are indicators of what you might want to
-*refactor* your code, a.k.a. reorganize the classes, functions, logic, etc. so
-it's easier to test the parts of the logic you care about. This can be much
-faster than writing the test case with the code as is!
+The fact that this code is hard to test is actually a useful indicator we should
+*refactor* our code, a.k.a. reorganize the classes, functions, logic, etc. so
+it's easier to test the parts of the logic you care about. In this case, we can
+notice that right now, this `run` function is a class method - that is, it isn't
+associated with a specific instance of a GameRunner, and the call to it is just
+`GameRunner.run`, meaning we don't keep the GameRunner that is used to play
+the game after the function runs. **I strongly encourage you to refactor the
+GameRunner class and everything that calls it so that `run` is no longer a
+class method, but rather gets called from a specific instance of a GameRunner
+(i.e. you first initialize a GameRunner(), then call `run` using that one).
 
-Refactoring is usually easier when you have a set of tests already. Run your
-existing tests periodically to see if things are working as expected (whether
-you're changing the behavior or trying to keep it constant). If you realize
-there are edge cases that you didn't catch in your original test list for your
-changes, you may decide to go back and add those tests. Make sure to commit
-between steps, potentially pushing when you hit milestones where all tests are
-passing.
+Because this changes how the game runner itself is called, you'll want to be
+careful that after this refactor, the game itself and your other tests still run.
+Refactoring is usually easier when you have a set of tests already. Run both your
+existing tests and `python main.py` periodically to see if things are working as
+expected (whether you're changing the behavior or trying to keep it constant).
+If you realize there are edge cases that you didn't catch in your original test
+list for your changes, you may decide to go back and add those tests. Make sure
+to commit between steps, potentially pushing when you hit milestones where all
+tests are passing.
 
 It's possible you may also want to tidy the code up a bit in nonfunctional ways
 (in particular, since some of the comments and strings in the game are kind of
@@ -792,4 +805,5 @@ edited something elsewhere without noticing!
 
 ## Turning it in
 When you have your changes done, commit your code to GitHub and then submit the
-link to your codebase to Canvas.
+link to your codebase to Canvas. **Make sure you have the bugs and tests in your
+instructions.txt file, and that your tests all pass and main.py can run.**
